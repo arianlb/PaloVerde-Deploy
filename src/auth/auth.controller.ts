@@ -25,13 +25,19 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
+  @Get('session')
+  @Auth()
+  getSession(@GetUser() user: User) {
+    return user;
+  }
+
   @Get('check')
   @Auth()
   check(@GetUser() user: User) {
     return this.authService.checkAuthStatus(user);
   }
 
-  @Get('test')
+  /*@Get('test')
   @UseGuards(AuthGuard())
   test(@GetUser() user: User) {
     return user;
@@ -41,6 +47,6 @@ export class AuthController {
   @Auth(ValidRoles.admin, ValidRoles.user)
   test2(@GetUser() user: User) {
     return user;
-  }
+  }*/
 
 }

@@ -29,6 +29,6 @@ export class User extends Document {
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.methods.toJSON = function () {
-    const { __v, password, isActive, ...user } = this.toObject();
+    const { __v, password, isActive, wishes, ...user } = this.toObject();
     return user;
 }
