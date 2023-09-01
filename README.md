@@ -8,7 +8,7 @@
 2. Ejecutar
 
 ```
-yarn install
+npm install
 ```
 
 3. Tener Nest CLI instalado
@@ -30,7 +30,7 @@ docker-compose up -d
 7. Ejecutar la aplicación en dev
 
 ```
-yarn start:dev
+npm run start:dev
 ```
 
 ## Stack usado
