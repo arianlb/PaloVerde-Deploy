@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class LoginUserDto {
     @ApiProperty()
@@ -15,4 +15,10 @@ export class LoginUserDto {
         message: 'The password must have a Uppercase, lowercase letter and a number'
     })
     password: string;
+
+    @IsOptional()
+    callbackUrl?: string;
+
+    @IsOptional()
+    redirect?: boolean;
 }
