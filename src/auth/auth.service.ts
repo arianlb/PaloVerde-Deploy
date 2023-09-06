@@ -22,8 +22,10 @@ export class AuthService {
       createAuthDto.password = bcrypt.hashSync(createAuthDto.password, 10);
       const user = await this.userModel.create(createAuthDto);
       return {
-        user,
-        token: this.generateJWT({ uid: user._id })
+        /*user,
+        token: this.generateJWT({ uid: user._id })*/
+        username: user.email,
+        password: createAuthDto.password
       };
 
     } catch (error) {
