@@ -19,13 +19,14 @@ export class AuthService {
 
   async register(createAuthDto: CreateAuthDto) {
     try {
+      const password = createAuthDto.password;
       createAuthDto.password = bcrypt.hashSync(createAuthDto.password, 10);
       const user = await this.userModel.create(createAuthDto);
       return {
         /*user,
         token: this.generateJWT({ uid: user._id })*/
         username: user.email,
-        password: createAuthDto.password
+        password
       };
 
     } catch (error) {
