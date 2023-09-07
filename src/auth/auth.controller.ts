@@ -32,6 +32,15 @@ export class AuthController {
     return user;
   }
 
+  @HttpCode(200)
+  @Post('logout')
+  @Auth()
+  logoutUser() {
+    return {
+      status: 'OK '
+    }
+  }
+
   @Get('check')
   @Auth()
   check(@GetUser() user: User) {
