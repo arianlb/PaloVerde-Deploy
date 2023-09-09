@@ -13,10 +13,6 @@ export class CreateWishDto {
 
     @ApiProperty()
     @IsMongoId()
-    readonly user: string;
-
-    @ApiProperty()
-    @IsMongoId()
     @IsOptional()
     readonly picture?: string;
 

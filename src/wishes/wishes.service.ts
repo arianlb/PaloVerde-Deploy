@@ -21,9 +21,7 @@ export class WishesService {
     private readonly userModel: Model<User>,
   ) { }
 
-  async create(createWishDto: CreateWishDto, file: Express.Multer.File): Promise<Wish> {
-    const user = await this.userModel.findById(createWishDto.user).exec();
-    if (!user) throw new NotFoundException('User not found');
+  async create(user: User, createWishDto: CreateWishDto, file: Express.Multer.File): Promise<Wish> {
     const offer = await this.offersService.findOne(createWishDto.offer);
     const price = offer.prices.find(price => price._id == createWishDto.price);
     if (!price) throw new NotFoundException('Price not found');
@@ -55,8 +53,9 @@ export class WishesService {
     return wish;
   }
 
-  async findAll() {
-    return this.wishModel.find().exec();
+  async findAll(uid: string) {
+    const user = await this.userModel.findById(uid, 'wishes').populate('wishes').exec();
+    return user.wishes;
   }
 
   async findOne(id: string) {
