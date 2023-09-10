@@ -23,25 +23,29 @@ export class OrdersService {
   ) { }
 
   async create(user: User): Promise<Order> {
-    try {
-      const { wishes } = await this.userModel.findById(user._id, 'wishes').populate('wishes').exec();
-      const items: Item[] = wishes.map(wish => ({
-        price_data: {
-          product_data: {
-            name: wish.material,
-            description: 'Print on ' + wish.material,
-          },
-          currency: 'usd',
-          unit_amount: wish.sizePrice + wish.photoPrice,
-        },
-        quantity: wish.amount,
-      }));
+    const { wishes } = await this.userModel.findById(user._id, 'wishes').populate('wishes').exec();
+    if (!wishes.length || wishes.length === 0) {
+      throw new BadRequestException('No wishes found');
+    }
 
+    const items: Item[] = wishes.map(wish => ({
+      price_data: {
+        product_data: {
+          name: wish.material,
+          description: 'Print on ' + wish.material,
+        },
+        currency: 'usd',
+        unit_amount: wish.sizePrice + wish.photoPrice,
+      },
+      quantity: wish.amount,
+    }));
+
+    try {
       const session = await this.stripe.checkout.sessions.create({
         line_items: items,
         mode: 'payment',
-        success_url: 'http://localhost:3000/success',
-        cancel_url: 'http://localhost:3000/cancel',
+        success_url: 'https://paloverdeprint.netlify.app/offer',
+        cancel_url: 'https://paloverdeprint.netlify.app',
       });
 
       const order = {
