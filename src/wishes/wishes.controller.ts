@@ -1,4 +1,4 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { WishesService } from './wishes.service';
@@ -9,6 +9,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from '../users/schemas/user.schema';
 
 @ApiTags('Wishes')
+@ApiBearerAuth()
 @Controller('wishes')
 export class WishesController {
   constructor(private readonly wishesService: WishesService) { }
