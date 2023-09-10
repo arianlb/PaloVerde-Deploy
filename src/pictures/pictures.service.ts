@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
@@ -37,7 +37,7 @@ export class PicturesService {
   async findOne(id: string): Promise<Picture> {
     const picture = await this.pictureModel.findById(id).exec();
     if (!picture) {
-      throw new BadRequestException(`Picture with id: '${id}' not found`);
+      throw new NotFoundException(`Picture with id: '${id}' not found`);
     }
     return picture;
   }
@@ -45,7 +45,7 @@ export class PicturesService {
   async update(id: string, updatePictureDto: UpdatePictureDto): Promise<Picture> {
     const picture = await this.pictureModel.findByIdAndUpdate(id, updatePictureDto, { new: true }).exec();
     if (!picture) {
-      throw new BadRequestException(`Picture with id: '${id}' not found`);
+      throw new NotFoundException(`Picture with id: '${id}' not found`);
     }
     return picture;
   }

@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
@@ -33,7 +33,7 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     const user = await this.userModel.findById(id).exec();
     if (!user) {
-      throw new BadRequestException(`User with id: '${id}' not found`);
+      throw new NotFoundException(`User with id: '${id}' not found`);
     }
     return user;
   }
@@ -41,7 +41,7 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
     if (!user) {
-      throw new BadRequestException(`User with id: '${id}' not found`);
+      throw new NotFoundException(`User with id: '${id}' not found`);
     }
     return user;
   }
@@ -49,7 +49,7 @@ export class UsersService {
   async remove(id: string): Promise<string> {
     const user = await this.userModel.findByIdAndDelete(id).exec();
     if (!user) {
-      throw new BadRequestException(`User with id: '${id}' not found`);
+      throw new NotFoundException(`User with id: '${id}' not found`);
     }
     return `User with the id: '${id}' was removed`;
   }

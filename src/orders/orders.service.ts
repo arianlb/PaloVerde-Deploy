@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import Stripe from 'stripe';
 import { InjectModel } from '@nestjs/mongoose';
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './schemas/order.schema';
@@ -25,7 +25,7 @@ export class OrdersService {
   async create(user: User): Promise<Order> {
     const { wishes } = await this.userModel.findById(user._id, 'wishes').populate('wishes').exec();
     if (!wishes.length || wishes.length === 0) {
-      throw new BadRequestException('No wishes found');
+      throw new NotFoundException('No wishes found');
     }
 
     const items: Item[] = wishes.map(wish => ({
@@ -71,7 +71,7 @@ export class OrdersService {
   async findOne(id: string): Promise<Order> {
     const order = await this.orderModel.findById(id).exec();
     if (!order) {
-      throw new BadRequestException(`Order with id: '${id}' not found`);
+      throw new NotFoundException(`Order with id: '${id}' not found`);
     }
     return order;
   }
@@ -79,7 +79,7 @@ export class OrdersService {
   async update(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
     const order = await this.orderModel.findByIdAndUpdate(id, updateOrderDto, { new: true }).exec();
     if (!order) {
-      throw new BadRequestException(`Order with id: '${id}' not found`);
+      throw new NotFoundException(`Order with id: '${id}' not found`);
     }
     return order;
   }
@@ -87,7 +87,7 @@ export class OrdersService {
   async remove(id: string): Promise<string> {
     const order = await this.orderModel.findByIdAndDelete(id).exec();
     if (!order) {
-      throw new BadRequestException(`Order with id: '${id}' not found`);
+      throw new NotFoundException(`Order with id: '${id}' not found`);
     }
     return `Order with the id: '${id}' was removed`;
   }
