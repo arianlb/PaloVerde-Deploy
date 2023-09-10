@@ -14,6 +14,9 @@ export class Order extends Document {
     @Prop({ default: 'Pending' })
     status: string;
 
+    @Prop({ required: true })
+    paymentLink: string;
+
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: User;
 

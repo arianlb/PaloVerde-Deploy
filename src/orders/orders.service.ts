@@ -1,23 +1,58 @@
 import { Model } from 'mongoose';
+import Stripe from 'stripe';
 import { InjectModel } from '@nestjs/mongoose';
 import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './schemas/order.schema';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { User } from '../users/schemas/user.schema';
+import { Item } from './interfaces/item.interface';
 
 @Injectable()
 export class OrdersService {
   private readonly logger = new Logger('OrdersService');
+  private readonly stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2023-08-16',
+  });
   constructor(
     @InjectModel(Order.name)
-    private readonly orderModel: Model<Order>
+    private readonly orderModel: Model<Order>,
+    @InjectModel(User.name)
+    private readonly userModel: Model<User>,
   ) { }
 
-  async create(createOrderDto: CreateOrderDto): Promise<Order> {
+  async create(user: User): Promise<Order> {
     try {
-      createOrderDto.createdAt = new Date();
-      return this.orderModel.create(createOrderDto);
+      const { wishes } = await this.userModel.findById(user._id, 'wishes').populate('wishes').exec();
+      const items: Item[] = wishes.map(wish => ({
+        price_data: {
+          product_data: {
+            name: wish.material,
+            description: 'Print on ' + wish.material,
+          },
+          currency: 'usd',
+          unit_amount: (wish.sizePrice + wish.photoPrice) * 100,
+        },
+        quantity: wish.amount,
+      }));
+
+      const session = await this.stripe.checkout.sessions.create({
+        line_items: items,
+        mode: 'payment',
+        success_url: 'http://localhost:3000/success',
+        cancel_url: 'http://localhost:3000/cancel',
+      });
+
+      const order = {
+        createdAt: new Date(),
+        paid: session.amount_total / 100,
+        status: 'Pending',
+        paymentLink: session.url,
+        user: user._id,
+        wishes: wishes.map(wish => wish._id),
+      };
+      return this.orderModel.create(order);
 
     } catch (error) {
       this.handelDBException(error);
