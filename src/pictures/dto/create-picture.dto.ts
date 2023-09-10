@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsNumber, IsOptional, IsString, Min } from "class-validator";
+import { IsInt, IsOptional, IsString, Min } from "class-validator";
 
 export class CreatePictureDto {
     @ApiProperty()
@@ -14,7 +14,7 @@ export class CreatePictureDto {
 
     @ApiProperty()
     @Type(() => Number)
-    @IsNumber()
+    @IsInt()
     @Min(0)
     price: number;
 }

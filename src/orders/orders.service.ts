@@ -32,7 +32,7 @@ export class OrdersService {
             description: 'Print on ' + wish.material,
           },
           currency: 'usd',
-          unit_amount: (wish.sizePrice + wish.photoPrice) * 100,
+          unit_amount: wish.sizePrice + wish.photoPrice,
         },
         quantity: wish.amount,
       }));
@@ -46,7 +46,7 @@ export class OrdersService {
 
       const order = {
         createdAt: new Date(),
-        paid: session.amount_total / 100,
+        paid: session.amount_total,
         status: 'Pending',
         paymentLink: session.url,
         user: user._id,
