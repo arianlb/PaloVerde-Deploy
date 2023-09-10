@@ -44,7 +44,7 @@ export class OrdersService {
       const session = await this.stripe.checkout.sessions.create({
         line_items: items,
         mode: 'payment',
-        success_url: 'https://paloverdeprint.netlify.app/offer',
+        success_url: 'https://paloverdeprint.netlify.app',
         cancel_url: 'https://paloverdeprint.netlify.app',
       });
 
