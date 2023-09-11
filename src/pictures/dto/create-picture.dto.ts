@@ -1,20 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, IsString, Min } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, Min } from "class-validator";
 
 export class CreatePictureDto {
-    @ApiProperty()
+    /*@ApiProperty()
+    @IsOptional()
     @IsString()
-    name: string;
+    url?: string;*/
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
-    url?: string;
-
-    @ApiProperty()
     @Type(() => Number)
     @IsInt()
     @Min(0)
-    price: number;
+    price?: number;
+
+    @ApiProperty()
+    @IsBoolean()
+    own: boolean;
 }

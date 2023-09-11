@@ -17,12 +17,21 @@ export class PicturesService {
   ) { }
 
   async create(createPictureDto: CreatePictureDto, file: Express.Multer.File): Promise<Picture> {
+    if (!file) {
+      throw new BadRequestException('No file was uploaded');
+    }
+    if (createPictureDto.own && !createPictureDto.price) {
+      throw new BadRequestException('Own picture must have a price');
+    }
+
     try {
-      if (file) {
-        const { secure_url } = await this.cloudinaryService.uploadFile(file);
-        createPictureDto.url = secure_url;
-      }
-      return this.pictureModel.create(createPictureDto);
+      const { secure_url } = await this.cloudinaryService.uploadFile(file);
+      const pictureDto = {
+        url: secure_url,
+        price: createPictureDto.own ? createPictureDto.price : 0,
+        own: createPictureDto.own
+      };
+      return this.pictureModel.create(pictureDto);
 
     } catch (error) {
       this.handelDBException(error);
@@ -31,7 +40,7 @@ export class PicturesService {
 
   async findAll(paginationDto: PaginationDto): Promise<Picture[]> {
     const { limit = 10, offset = 0 } = paginationDto;
-    return this.pictureModel.find().limit(limit).skip(offset).exec();
+    return this.pictureModel.find({ own: true }).limit(limit).skip(offset).exec();
   }
 
   async findOne(id: string): Promise<Picture> {

@@ -3,14 +3,14 @@ import { Document } from "mongoose";
 
 @Schema()
 export class Picture extends Document {
-    @Prop({ required: true })
-    name: string;
-
     @Prop({ default: 'No_image' })
     url: string;
 
     @Prop({ required: true })
     price: number;
+
+    @Prop({ required: true })
+    own: boolean;
 }
 
 export const PictureSchema = SchemaFactory.createForClass(Picture);
