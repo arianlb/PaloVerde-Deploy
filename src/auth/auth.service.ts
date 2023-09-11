@@ -41,7 +41,8 @@ export class AuthService {
       throw new UnauthorizedException('Credentials are not valid');
     }
     return {
-      token: this.generateJWT({ uid: user._id })
+      token: this.generateJWT({ uid: user._id }),
+      user
     };
   }
 
