@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { AuthModule } from '../auth/auth.module';
+import { UsersModule } from '../users/users.module';
+import { OffersModule } from '../offers/offers.module';
+import { PicturesModule } from '../pictures/pictures.module';
+
 import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
 import { Order, OrderSchema } from './schemas/order.schema';
-import { AuthModule } from '../auth/auth.module';
-import { UsersModule } from '../users/users.module';
 
 @Module({
   controllers: [OrdersController],
@@ -17,6 +21,8 @@ import { UsersModule } from '../users/users.module';
       }
     ]),
     AuthModule,
+    OffersModule,
+    PicturesModule,
     UsersModule
   ]
 })

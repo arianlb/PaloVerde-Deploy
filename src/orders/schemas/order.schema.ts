@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from "mongoose";
 import { User } from '../../users/schemas/user.schema';
-import { Wish } from '../../wishes/schemas/wish.schema';
+import { Wish, WishSchema } from './wish.schema';
 
 @Schema()
 export class Order extends Document {
@@ -20,7 +20,7 @@ export class Order extends Document {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: User;
 
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Wish' }] })
+    @Prop([WishSchema])
     wishes: Wish[];
 }
 

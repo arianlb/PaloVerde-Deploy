@@ -15,10 +15,13 @@ import { User } from '../users/schemas/user.schema';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) { }
 
-  @Get('payment')
+  @Post()
   @Auth()
-  create(@GetUser() user: User) {
-    return this.ordersService.create(user);
+  create(
+    @GetUser() user: User,
+    @Body() createOrderDto: CreateOrderDto[]
+  ) {
+    return this.ordersService.create(user, createOrderDto);
   }
 
   @Get()

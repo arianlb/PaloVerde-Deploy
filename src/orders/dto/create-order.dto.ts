@@ -1,29 +1,23 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsDate, IsIn, IsMongoId, IsNumber, IsOptional, IsString, Min } from "class-validator";
+import { Type } from "class-transformer";
+import { IsInt, IsMongoId, Min } from "class-validator";
 
 export class CreateOrderDto {
     @ApiProperty()
-    @IsOptional()
-    @IsDate()
-    createdAt?: Date;
-
-    @ApiProperty()
-    @IsNumber()
-    @Min(0)
-    paid: number;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    @IsIn(['Pending', 'Accepted', 'Rejected', 'Ready', 'Delivered'])
-    status?: string;
+    @IsMongoId()
+    readonly offer: string;
 
     @ApiProperty()
     @IsMongoId()
-    user: string;
+    readonly price: string;
 
     @ApiProperty()
-    @IsArray()
-    @IsMongoId({ each: true })
-    wishes: string[];
+    @IsMongoId()
+    readonly picture: string;
+
+    @ApiProperty()
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    readonly quantity: number;
 }
