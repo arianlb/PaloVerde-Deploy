@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateOfferDto {
@@ -19,6 +20,7 @@ export class CreateOfferDto {
     image?: string;
 
     @ApiProperty()
+    @Type(() => Boolean)
     @IsOptional()
     @IsBoolean()
     isActive?: boolean;

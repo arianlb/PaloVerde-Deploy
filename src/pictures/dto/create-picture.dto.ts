@@ -3,10 +3,6 @@ import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsOptional, Min } from "class-validator";
 
 export class CreatePictureDto {
-    /*@ApiProperty()
-    @IsOptional()
-    @IsString()
-    url?: string;*/
 
     @ApiProperty()
     @IsOptional()
@@ -16,6 +12,7 @@ export class CreatePictureDto {
     price?: number;
 
     @ApiProperty()
+    @Type(() => Boolean)
     @IsBoolean()
     own: boolean;
 }
