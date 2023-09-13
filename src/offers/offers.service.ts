@@ -29,15 +29,20 @@ export class OffersService {
     }
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<Offer[]> {
+  async findAll(paginationDto: PaginationDto, isClient: boolean = true): Promise<Offer[]> {
     const { limit = 10, offset = 0 } = paginationDto;
-    return this.offerModel.find().limit(limit).skip(offset).exec();
+    return isClient
+      ? this.offerModel.find({ isActive: true }).limit(limit).skip(offset).exec()
+      : this.offerModel.find().limit(limit).skip(offset).exec();
   }
 
-  async findOne(id: string): Promise<Offer> {
+  async findOne(id: string, isClient: boolean = true): Promise<Offer> {
     const offer = await this.offerModel.findById(id).exec();
     if (!offer) {
       throw new NotFoundException(`Offer with id: '${id}' not found`);
+    }
+    if (isClient && !offer.isActive) {
+      throw new BadRequestException(`Offer with id: '${id}' is not active`);
     }
     return offer;
   }

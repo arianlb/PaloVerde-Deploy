@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateOfferDto {
     @ApiProperty()
@@ -17,4 +17,9 @@ export class CreateOfferDto {
     @IsString()
     @IsNotEmpty()
     image?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsBoolean()
+    isActive?: boolean;
 }

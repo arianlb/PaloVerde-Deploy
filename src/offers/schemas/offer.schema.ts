@@ -13,6 +13,9 @@ export class Offer extends Document {
     @Prop({ default: 'No_image' })
     image: string;
 
+    @Prop({ default: true })
+    isActive: boolean;
+
     @Prop([PriceSchema])
     prices: Price[];
 }
