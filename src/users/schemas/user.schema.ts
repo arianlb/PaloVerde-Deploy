@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from "mongoose";
-import { Wish } from '../../wishes/schemas/wish.schema';
+import { Document } from "mongoose";
 
 @Schema()
 export class User extends Document {
@@ -21,14 +20,11 @@ export class User extends Document {
         default: ['ROLE_USER']
     })
     roles: string[];
-
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Wish' }] })
-    wishes: Wish[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.methods.toJSON = function () {
-    const { __v, password, isActive, wishes, ...user } = this.toObject();
+    const { __v, password, isActive, ...user } = this.toObject();
     return user;
 }
