@@ -10,9 +10,4 @@ export class CreatePictureDto {
     @IsInt()
     @Min(0)
     price?: number;
-
-    @ApiProperty()
-    @Type(() => Boolean)
-    @IsBoolean()
-    own: boolean;
 }

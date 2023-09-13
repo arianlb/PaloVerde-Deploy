@@ -20,16 +20,14 @@ export class PicturesService {
     if (!file) {
       throw new BadRequestException('No file was uploaded');
     }
-    if (createPictureDto.own && !createPictureDto.price) {
-      throw new BadRequestException('Own picture must have a price');
-    }
+    const clientPhoto = !createPictureDto.price;
 
     try {
       const { secure_url } = await this.cloudinaryService.uploadFile(file);
       const pictureDto = {
         url: secure_url,
-        price: createPictureDto.own ? createPictureDto.price : 0,
-        own: createPictureDto.own
+        price: clientPhoto ? 0 : createPictureDto.price,
+        own: !clientPhoto
       };
       return this.pictureModel.create(pictureDto);
 
