@@ -29,6 +29,15 @@ export class OrdersController {
     return this.ordersService.findAll(paginationDto);
   }
 
+  @Get('user')
+  @Auth()
+  findAllByUser(
+    @GetUser() user: User,
+    @Query() paginationDto: PaginationDto
+  ) {
+    return this.ordersService.findAllByUser(user, paginationDto);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.ordersService.findOne(id);

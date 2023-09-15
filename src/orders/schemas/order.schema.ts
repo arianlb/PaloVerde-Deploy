@@ -17,6 +17,9 @@ export class Order extends Document {
     @Prop({ required: true })
     paymentLink: string;
 
+    @Prop({ required: true })
+    sessionId: string;
+
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: User;
 
@@ -25,3 +28,8 @@ export class Order extends Document {
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
+OrderSchema.methods.toJSON = function () {
+    const { __v, sessionId, user, ...order } = this.toObject();
+    return order;
+}

@@ -42,6 +42,7 @@ export class OrdersService {
         paid: session.amount_total,
         status: 'Pending',
         paymentLink: session.url,
+        sessionId: session.id,
         user: user._id,
         wishes
       };
@@ -57,10 +58,26 @@ export class OrdersService {
     return this.orderModel.find().limit(limit).skip(offset).exec();
   }
 
+  async findAllByUser(user: User, paginationDto: PaginationDto): Promise<Order[]> {
+    const { limit = 10, offset = 0 } = paginationDto;
+    return this.orderModel.find({ user: user._id })
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(offset)
+      .exec();
+  }
+
   async findOne(id: string): Promise<Order> {
     const order = await this.orderModel.findById(id).exec();
     if (!order) {
       throw new NotFoundException(`Order with id: '${id}' not found`);
+    }
+    if (order.status === 'Pending') {
+      const { payment_status } = await this.stripe.checkout.sessions.retrieve(order.sessionId);
+      if (payment_status === 'paid') {
+        order.status = 'Paid';
+        order.save();
+      }
     }
     return order;
   }
