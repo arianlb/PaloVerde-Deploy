@@ -78,7 +78,7 @@ export class OrdersService {
 
   async findAllByUser(user: User, paginationDto: PaginationDto): Promise<Order[]> {
     const { limit = 10, offset = 0 } = paginationDto;
-    return this.orderModel.find({ user: user._id })
+    return this.orderModel.find({ user: user._id }, { wishes: 0 })
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(offset)
