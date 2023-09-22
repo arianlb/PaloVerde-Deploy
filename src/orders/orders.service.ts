@@ -30,14 +30,32 @@ export class OrdersService {
     const items: Item[] = this.createItemsForStripe(wishes);
 
     try {
+
+      const orderDto = {
+        createdAt: new Date(),
+        paid: 0,
+        status: 'Pending',
+        paymentLink: 'No yet',
+        sessionId: 'No yet',
+        user: user._id,
+        wishes
+      };
+
+      const order = await this.orderModel.create(orderDto);
+
       const session = await this.stripe.checkout.sessions.create({
         line_items: items,
         mode: 'payment',
-        success_url: 'https://paloverdeprint.netlify.app',
-        cancel_url: 'https://paloverdeprint.netlify.app',
+        success_url: `https://paloverdeprint.netlify.app/order/${order._id}`,
+        cancel_url: 'https://paloverdeprint.netlify.app/order',
       });
 
-      const order = {
+      order.paid = session.amount_total;
+      order.paymentLink = session.url;
+      order.sessionId = session.id;
+      return order.save();
+
+      /*const order = {
         createdAt: new Date(),
         paid: session.amount_total,
         status: 'Pending',
@@ -46,7 +64,7 @@ export class OrdersService {
         user: user._id,
         wishes
       };
-      return this.orderModel.create(order);
+      return this.orderModel.create(order);*/
 
     } catch (error) {
       this.handelDBException(error);
