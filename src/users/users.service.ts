@@ -25,9 +25,17 @@ export class UsersService {
     }
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<User[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
-    return this.userModel.find().limit(limit).skip(offset).exec();
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, page = 1 } = paginationDto;
+    const skip = (page - 1) * limit;
+    const [users, total] = await Promise.all([
+      this.userModel.find().skip(skip).limit(limit).exec(),
+      this.userModel.countDocuments()
+    ]);
+    return {
+      data: users,
+      total_pages: Math.ceil(total / limit)
+    }
   }
 
   async findOne(id: string): Promise<User> {

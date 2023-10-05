@@ -71,18 +71,34 @@ export class OrdersService {
     }
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<Order[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
-    return this.orderModel.find().limit(limit).skip(offset).exec();
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, page = 1 } = paginationDto;
+    const skip = (page - 1) * limit;
+    const [orders, total] = await Promise.all([
+      this.orderModel.find().skip(skip).limit(limit).exec(),
+      this.orderModel.countDocuments()
+    ]);
+    return {
+      data: orders,
+      total_pages: Math.ceil(total / limit)
+    }
   }
 
-  async findAllByUser(user: User, paginationDto: PaginationDto): Promise<Order[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
-    return this.orderModel.find({ user: user._id }, { wishes: 0 })
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .skip(offset)
-      .exec();
+  async findAllByUser(user: User, paginationDto: PaginationDto) {
+    const { limit = 10, page = 1 } = paginationDto;
+    const skip = (page - 1) * limit;
+    const [orders, total] = await Promise.all([
+      this.orderModel.find({ user: user._id }, { wishes: 0 })
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .exec(),
+      this.orderModel.countDocuments({ user: user._id })
+    ]);
+    return {
+      data: orders,
+      total_pages: Math.ceil(total / limit)
+    }
   }
 
   async findOne(id: string): Promise<Order> {

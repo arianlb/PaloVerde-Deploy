@@ -36,9 +36,17 @@ export class PicturesService {
     }
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<Picture[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
-    return this.pictureModel.find({ own: true }).limit(limit).skip(offset).exec();
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, page = 1 } = paginationDto;
+    const skip = (page - 1) * limit;
+    const [pictures, total] = await Promise.all([
+      this.pictureModel.find({ own: true }).skip(skip).limit(limit).exec(),
+      this.pictureModel.countDocuments()
+    ]);
+    return {
+      data: pictures,
+      total_pages: Math.ceil(total / limit)
+    }
   }
 
   async findOne(id: string): Promise<Picture> {

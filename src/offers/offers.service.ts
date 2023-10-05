@@ -29,11 +29,21 @@ export class OffersService {
     }
   }
 
-  async findAll(paginationDto: PaginationDto, isClient: boolean = true): Promise<Offer[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
-    return isClient
-      ? this.offerModel.find({ isActive: true }).limit(limit).skip(offset).exec()
-      : this.offerModel.find().limit(limit).skip(offset).exec();
+  async findAll(paginationDto: PaginationDto, isClient: boolean = true) {
+    const { limit = 10, page = 1 } = paginationDto;
+    const skip = (page - 1) * limit;
+    const [offers, total] = await Promise.all([
+      isClient
+        ? this.offerModel.find({ isActive: true }).skip(skip).limit(limit).exec()
+        : this.offerModel.find().skip(skip).limit(limit).exec(),
+      isClient
+        ? this.offerModel.countDocuments({ isActive: true })
+        : this.offerModel.countDocuments()
+    ]);
+    return {
+      data: offers,
+      total_pages: Math.ceil(total / limit)
+    }
   }
 
   async findOne(id: string, isClient: boolean = true): Promise<Offer> {
