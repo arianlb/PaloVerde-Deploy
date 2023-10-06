@@ -32,6 +32,9 @@ export class UsersService {
       this.userModel.find().skip(skip).limit(limit).exec(),
       this.userModel.countDocuments()
     ]);
+    if (!users.length) {
+      throw new NotFoundException('No users found');
+    }
     return {
       data: users,
       totalPages: Math.ceil(total / limit)

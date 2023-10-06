@@ -40,6 +40,9 @@ export class OffersService {
         ? this.offerModel.countDocuments({ isActive: true })
         : this.offerModel.countDocuments()
     ]);
+    if (!offers.length) {
+      throw new NotFoundException('No offers found');
+    }
     return {
       data: offers,
       totalPages: Math.ceil(total / limit)

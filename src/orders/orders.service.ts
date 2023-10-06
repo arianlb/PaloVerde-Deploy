@@ -78,6 +78,9 @@ export class OrdersService {
       this.orderModel.find().skip(skip).limit(limit).exec(),
       this.orderModel.countDocuments()
     ]);
+    if (!orders.length) {
+      throw new NotFoundException('No orders found');
+    }
     return {
       data: orders,
       totalPages: Math.ceil(total / limit)

@@ -43,6 +43,9 @@ export class PicturesService {
       this.pictureModel.find({ own: true }).skip(skip).limit(limit).exec(),
       this.pictureModel.countDocuments()
     ]);
+    if (!pictures.length) {
+      throw new NotFoundException('No pictures found');
+    }
     return {
       data: pictures,
       totalPages: Math.ceil(total / limit)
