@@ -45,7 +45,7 @@ export class PicturesService {
     ]);
     return {
       data: pictures,
-      total_pages: Math.ceil(total / limit)
+      totalPages: Math.ceil(total / limit)
     }
   }
 

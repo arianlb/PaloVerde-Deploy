@@ -42,7 +42,7 @@ export class OffersService {
     ]);
     return {
       data: offers,
-      total_pages: Math.ceil(total / limit)
+      totalPages: Math.ceil(total / limit)
     }
   }
 

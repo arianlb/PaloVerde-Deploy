@@ -34,7 +34,7 @@ export class UsersService {
     ]);
     return {
       data: users,
-      total_pages: Math.ceil(total / limit)
+      totalPages: Math.ceil(total / limit)
     }
   }
 

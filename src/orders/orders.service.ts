@@ -80,7 +80,7 @@ export class OrdersService {
     ]);
     return {
       data: orders,
-      total_pages: Math.ceil(total / limit)
+      totalPages: Math.ceil(total / limit)
     }
   }
 
@@ -97,7 +97,7 @@ export class OrdersService {
     ]);
     return {
       data: orders,
-      total_pages: Math.ceil(total / limit)
+      totalPages: Math.ceil(total / limit)
     }
   }
 
