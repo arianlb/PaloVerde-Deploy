@@ -142,16 +142,15 @@ export class OrdersService {
         this.offersService.findOne(wish.offer),
         this.picturesService.findOne(wish.picture),
       ]);
-      const price = offer.prices.find(price => price._id == wish.price);
-      if (!price) throw new NotFoundException('Price not found');
 
       return {
-        material: offer.material,
+        material: offer.title,
         image: picture.url,
-        sizePrice: price.value,
+        price: wish.height * wish.width * offer.price,
+        discount: offer.discount,
         photoPrice: picture.price,
         quantity: wish.quantity,
-        size: price.size
+        size: `${wish.height}Hx${wish.width}W`
       };
     }));
 
@@ -166,7 +165,7 @@ export class OrdersService {
           description: 'Print on ' + wish.material,
         },
         currency: 'usd',
-        unit_amount: wish.sizePrice + wish.photoPrice,
+        unit_amount: (wish.price - Math.ceil((wish.price * wish.discount) * 0.01)) + wish.photoPrice,
       },
       quantity: wish.quantity,
     }));

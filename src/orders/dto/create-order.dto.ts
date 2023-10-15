@@ -8,8 +8,16 @@ export class CreateOrderDto {
     readonly offer: string;
 
     @ApiProperty()
-    @IsMongoId()
-    readonly price: string;
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    readonly height: number;
+
+    @ApiProperty()
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    readonly width: number;
 
     @ApiProperty()
     @IsMongoId()

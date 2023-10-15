@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, Min } from "class-validator";
 
 export class CreateOfferDto {
     @ApiProperty()
@@ -24,4 +24,15 @@ export class CreateOfferDto {
     @IsOptional()
     @IsBoolean()
     isActive?: boolean;
+
+    @ApiProperty()
+    @Type(() => Number)
+    @Min(0)
+    price: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @Type(() => Number)
+    @Min(0)
+    discount?: number;
 }

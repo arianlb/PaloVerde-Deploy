@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from "mongoose";
-import { Price, PriceSchema } from './price.schema';
 
 @Schema()
 export class Offer extends Document {
@@ -16,8 +15,11 @@ export class Offer extends Document {
     @Prop({ default: true })
     isActive: boolean;
 
-    @Prop([PriceSchema])
-    prices: Price[];
+    @Prop({ default: 0 })
+    price: number;
+
+    @Prop({ default: 0 })
+    discount: number;
 }
 
 export const OfferSchema = SchemaFactory.createForClass(Offer);

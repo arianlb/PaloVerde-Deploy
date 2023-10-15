@@ -4,8 +4,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Offer } from './schemas/offer.schema';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
-import { PaginationDto } from '../common/dto/pagination.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { PaginationOfferDto } from './dto/pagination-offer.dto';
 
 @Injectable()
 export class OffersService {
@@ -29,16 +29,16 @@ export class OffersService {
     }
   }
 
-  async findAll(paginationDto: PaginationDto, isClient: boolean = true) {
-    const { limit = 10, page = 1 } = paginationDto;
+  async findAll(paginationOfferDto: PaginationOfferDto, isClient: boolean = true) {
+    const { limit = 10, page = 1, material = 'Paper' } = paginationOfferDto;
     const skip = (page - 1) * limit;
     const [offers, total] = await Promise.all([
       isClient
-        ? this.offerModel.find({ isActive: true }).skip(skip).limit(limit).exec()
-        : this.offerModel.find().skip(skip).limit(limit).exec(),
+        ? this.offerModel.find({ isActive: true, material }).skip(skip).limit(limit).exec()
+        : this.offerModel.find({ material }).skip(skip).limit(limit).exec(),
       isClient
-        ? this.offerModel.countDocuments({ isActive: true })
-        : this.offerModel.countDocuments()
+        ? this.offerModel.countDocuments({ isActive: true, material })
+        : this.offerModel.countDocuments({ material })
     ]);
     if (!offers.length) {
       throw new NotFoundException('No offers found');
@@ -79,15 +79,6 @@ export class OffersService {
     await this.offerModel.findByIdAndDelete(id).exec();
 
     return `Offer with the id: '${id}' was removed`;
-  }
-
-  async addPrice(id: string, price: any): Promise<Offer> {
-    const offer = await this.offerModel.findById(id).exec();
-    if (!offer) {
-      throw new NotFoundException(`Offer with id: '${id}' not found`);
-    }
-    offer.prices.push(price);
-    return offer.save();
   }
 
   private handelDBException(error: any): never {

@@ -4,11 +4,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseIntercepto
 import { OffersService } from './offers.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
-import { CreatePriceDto } from './dto/create-price.dto';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
-import { PaginationDto } from '../common/dto/pagination.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { ValidRoles } from '../auth/interfaces/valid-roles';
+import { PaginationOfferDto } from './dto/pagination-offer.dto';
 
 @ApiTags('Offers')
 @ApiBearerAuth()
@@ -27,14 +26,18 @@ export class OffersController {
   }
 
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.offersService.findAll(paginationDto);
+  findAll(
+    @Query() paginationOfferDto: PaginationOfferDto,
+  ) {
+    return this.offersService.findAll(paginationOfferDto);
   }
 
   @Get('admin')
   @Auth(ValidRoles.admin)
-  findAllAdmin(@Query() paginationDto: PaginationDto) {
-    return this.offersService.findAll(paginationDto, false);
+  findAllAdmin(
+    @Query() paginationOfferDto: PaginationOfferDto,
+  ) {
+    return this.offersService.findAll(paginationOfferDto, false);
   }
 
   @Get(':id')
@@ -58,11 +61,5 @@ export class OffersController {
   @Auth(ValidRoles.admin)
   remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.offersService.remove(id);
-  }
-
-  @Post(':id/prices')
-  @Auth(ValidRoles.admin)
-  addPrice(@Param('id', ParseMongoIdPipe) id: string, @Body() createPriceDto: CreatePriceDto) {
-    return this.offersService.addPrice(id, createPriceDto);
   }
 }

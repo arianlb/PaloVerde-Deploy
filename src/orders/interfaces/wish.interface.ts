@@ -1,7 +1,8 @@
 export interface Wish {
     material: string;
     image: string;
-    sizePrice: number;
+    price: number;
+    discount: number;
     photoPrice: number;
     quantity: number;
     size: string;
