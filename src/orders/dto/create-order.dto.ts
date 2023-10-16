@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsMongoId, Min } from "class-validator";
+import { IsInt, IsMongoId, IsPositive, Min } from "class-validator";
 
 export class CreateOrderDto {
     @ApiProperty()
@@ -9,14 +9,12 @@ export class CreateOrderDto {
 
     @ApiProperty()
     @Type(() => Number)
-    @IsInt()
-    @Min(1)
+    @IsPositive()
     readonly height: number;
 
     @ApiProperty()
     @Type(() => Number)
-    @IsInt()
-    @Min(1)
+    @IsPositive()
     readonly width: number;
 
     @ApiProperty()

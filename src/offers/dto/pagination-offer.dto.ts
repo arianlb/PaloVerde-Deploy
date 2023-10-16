@@ -21,7 +21,9 @@ export class PaginationOfferDto {
     @IsPositive()
     page?: number;
 
-    @ApiProperty()
+    @ApiProperty({
+        default: 'Paper',
+    })
     @IsOptional()
     @IsString()
     @IsNotEmpty()

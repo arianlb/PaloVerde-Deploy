@@ -146,7 +146,7 @@ export class OrdersService {
       return {
         material: offer.title,
         image: picture.url,
-        price: wish.height * wish.width * offer.price,
+        price: Math.ceil(wish.height * wish.width) * offer.price,
         discount: offer.discount,
         photoPrice: picture.price,
         quantity: wish.quantity,
