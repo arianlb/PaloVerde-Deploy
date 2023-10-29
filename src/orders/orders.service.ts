@@ -29,7 +29,7 @@ export class OrdersService {
     const wishes: Wish[] = await this.createWishlist(createOrderDto);
     const items: Item[] = this.createItemsForStripe(wishes);
 
-    //try {
+    try {
 
       const orderDto = {
         createdAt: new Date(),
@@ -66,9 +66,9 @@ export class OrdersService {
       };
       return this.orderModel.create(order);*/
 
-    /*} catch (error) {
+    } catch (error) {
       this.handelDBException(error);
-    }*/
+    }
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -175,10 +175,10 @@ export class OrdersService {
   }
 
   private handelDBException(error: any): never {
-    if (error.code === 11000) {
+    /*if (error.code === 11000) {
       throw new BadRequestException(`Order already exists, ${JSON.stringify(error.keyValue)}`);
-    }
+    }*/
     this.logger.error(error);
-    throw new InternalServerErrorException('Unexpected error, check server logs');
+    throw new BadRequestException(error.message);
   }
 }
