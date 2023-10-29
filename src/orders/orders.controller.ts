@@ -1,5 +1,5 @@
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseArrayPipe } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -19,7 +19,7 @@ export class OrdersController {
   @Auth()
   create(
     @GetUser() user: User,
-    @Body() createOrderDto: CreateOrderDto[]
+    @Body(new ParseArrayPipe({ items: CreateOrderDto })) createOrderDto: CreateOrderDto[]
   ) {
     return this.ordersService.create(user, createOrderDto);
   }

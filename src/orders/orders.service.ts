@@ -138,9 +138,6 @@ export class OrdersService {
   private async createWishlist(createOrderDto: CreateOrderDto[]): Promise<Wish[]> {
 
     const wishes = await Promise.all(createOrderDto.map(async wish => {
-      if (wish.height <= 0 || wish.width <= 0 || wish.quantity < 1) {
-        throw new BadRequestException('Invalid dimensions or quantity');
-      }
       const [offer, picture] = await Promise.all([
         this.offersService.findOne(wish.offer),
         this.picturesService.findOne(wish.picture),
