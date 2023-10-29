@@ -149,8 +149,10 @@ export class OrdersService {
         price: Math.ceil(wish.height * wish.width) * offer.price,
         discount: offer.discount,
         photoPrice: picture.price,
+        offerPrice: offer.price,
         quantity: wish.quantity,
-        size: `${wish.height}Hx${wish.width}W`
+        height: wish.height,
+        width: wish.width
       };
     }));
 

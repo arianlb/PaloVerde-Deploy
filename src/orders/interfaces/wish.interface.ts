@@ -4,6 +4,8 @@ export interface Wish {
     price: number;
     discount: number;
     photoPrice: number;
+    offerPrice: number;
     quantity: number;
-    size: string;
+    height: number;
+    width: number;
 }
