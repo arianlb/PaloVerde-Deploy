@@ -29,7 +29,7 @@ export class OrdersService {
     const wishes: Wish[] = await this.createWishlist(createOrderDto);
     const items: Item[] = this.createItemsForStripe(wishes);
 
-    try {
+    //try {
 
       const orderDto = {
         createdAt: new Date(),
@@ -66,9 +66,9 @@ export class OrdersService {
       };
       return this.orderModel.create(order);*/
 
-    } catch (error) {
+    /*} catch (error) {
       this.handelDBException(error);
-    }
+    }*/
   }
 
   async findAll(paginationDto: PaginationDto) {
