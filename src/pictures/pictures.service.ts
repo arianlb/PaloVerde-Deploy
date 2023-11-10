@@ -41,7 +41,7 @@ export class PicturesService {
     const skip = (page - 1) * limit;
     const [pictures, total] = await Promise.all([
       this.pictureModel.find({ own: true }).skip(skip).limit(limit).exec(),
-      this.pictureModel.countDocuments()
+      this.pictureModel.countDocuments({ own: true })
     ]);
     if (!pictures.length) {
       throw new NotFoundException('No pictures found');
